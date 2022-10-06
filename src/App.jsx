@@ -5,7 +5,7 @@ import { GlobalStyles } from "./styles";
 
 function App() {
   const [user, setUser] = useState({});
-  console.log(user);
+
   return (
     <>
       <GlobalStyles />
