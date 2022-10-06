@@ -14,7 +14,10 @@ button{
     cursor: pointer;
     transition: .5s;
 }
-
+.animation{
+    animation: jackInTheBox; 
+    animation-duration: 1s; 
+}
 
 :root{
     --color-primary: #FF577F;
@@ -28,11 +31,17 @@ button{
     --grey-0: #F8F9FA;
 
 
-    --negative: #3FE864;
-    --success: #E83F5B;
+    --negative: #E83F5B;
+    --success: #3FE864;
+
+    --toastify-icon-color-error: var(--negative);
+    --toastify-icon-color-success: var(--success);
+    --toastify-color-success: var(--success);
+    --toastify-color-error: var(--negative);
+
+
 
     --background-color: #121214;    
-
     --title-size-1: 16px; 
     --title-weight-1: 700;
     --title-size-2: 16px;

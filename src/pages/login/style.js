@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 
-export const StyledContainer = styled.div`
+export const StyledContainer = styled.div `
 width: 100vw;
 height: 100vh;
 background-color: var(--background-color);
@@ -9,7 +9,7 @@ display: flex;
 align-items: center;
 justify-content: center;
 `
-export const StyledLogin = styled.div`
+export const StyledLogin = styled.div `
     
     width: 100%;
     height: max-content;
@@ -75,6 +75,10 @@ export const StyledLogin = styled.div`
                     font-weight: var(--headline-weight-1);
                     text-align: left;
                     width: 100%;
+                }
+                .error {
+                font-size: 10px;
+                color: var(--negative);
                 }
             }
             p{

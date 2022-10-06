@@ -6,9 +6,33 @@ import { StyledSignUp } from "./style";
 import * as yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import {instance} from "../../services/api";
+import { ToastContainer, toast } from "react-toastify";
+import { instance } from "../../services/api";
 
 export const RenderHomePage = () => {
+  const signUpSucess = () =>
+    toast.success("Cadastrado com sucesso!", {
+      position: "top-center",
+      autoClose: 1000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      toastId: 1,
+    });
+  const signUpError = () =>
+    toast.error("Falha ao cadastrar!", {
+      position: "top-center",
+      autoClose: 1000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      toastId: 2,
+    });
+
   const modules = [
     "Primeiro módulo (Introdução ao Frontend)",
     "Segundo módulo (Frontend Avançado)",
@@ -57,24 +81,26 @@ export const RenderHomePage = () => {
 
   const navigate = useNavigate();
 
-  const backToLogin = () => navigate("/login");
 
-
-  const postSignUp = ((obj) => {
-    instance.post('users', 
-        obj
-    )
-    .then(response => console.log(response))
-    .catch(err => err)
-  })
-
+  const postSignUp = (obj) => {
+    instance
+      .post("users", obj)
+      .then((response) => {
+        signUpSucess();
+        navigate("/login");
+      })
+      .catch((err) => {
+        console.log(err);
+        signUpError();
+      });
+  };
 
   return (
     <StyledContainer>
       <StyledSignUp>
         <section className="animate__zoomInDown">
           <img src={logo} alt="Logo KenzieHub" />
-          <BackButton onClick={backToLogin}>Voltar</BackButton>
+          <BackButton to={"/login"}>Voltar</BackButton>
         </section>
         <div className="animate__zoomInUp">
           <form onSubmit={handleSubmit(onSubmitSignUp)}>
@@ -87,7 +113,7 @@ export const RenderHomePage = () => {
               placeholder="Digite aqui seu nome"
               {...register("name")}
             />
-            {errors.name?.message}
+            <span className="error">{errors.name?.message}</span>
             <label htmlFor="email">Email:</label>
             <input
               type="email"
@@ -95,7 +121,7 @@ export const RenderHomePage = () => {
               placeholder="Digite aqui seu email"
               {...register("email")}
             />
-            {errors.email?.message}
+            <span className="error">{errors.email?.message}</span>
             <label htmlFor="password">Senha:</label>
             <input
               type="password"
@@ -103,7 +129,7 @@ export const RenderHomePage = () => {
               placeholder="Digite aqui sua senha"
               {...register("password")}
             />
-            {errors.password?.message}
+            <span className="error">{errors.password?.message}</span>
             <label htmlFor="passwordConfirm">Confirmar senha:</label>
             <input
               type="password"
@@ -111,7 +137,7 @@ export const RenderHomePage = () => {
               placeholder="Digite novamente sua senha"
               {...register("passwordConfirm")}
             />
-            {errors.passwordConfirm?.message}
+            <span className="error">{errors.passwordConfirm?.message}</span>
             <label htmlFor="bio">Bio:</label>
             <input
               type="text"
@@ -119,7 +145,7 @@ export const RenderHomePage = () => {
               placeholder="Fale sobre você"
               {...register("bio")}
             />
-            {errors.bio?.message}
+            <span className="error">{errors.bio?.message}</span>
             <label htmlFor="contact">Contato:</label>
             <input
               type="text"
@@ -127,7 +153,7 @@ export const RenderHomePage = () => {
               placeholder="Opção de contato"
               {...register("contact")}
             />
-            {errors.contact?.message}
+            <span className="error">{errors.contact?.message}</span>
             <label htmlFor="course_module">Selecione o módulo:</label>
             <select
               name="course_module"
@@ -139,11 +165,12 @@ export const RenderHomePage = () => {
               </option>
               {modulesOptions}
             </select>
-            {errors.course_module?.message}
+            <span className="error">{errors.course_module?.message}</span>
             <MainButton type="submit">Cadastrar</MainButton>
           </form>
         </div>
       </StyledSignUp>
+      <ToastContainer />
     </StyledContainer>
   );
 };
