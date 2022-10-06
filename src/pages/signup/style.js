@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-export const StyledSignUp = styled.div`
+export const StyledSignUp = styled.div `
     
     width: 100%;
     height: max-content;
@@ -88,6 +88,12 @@ export const StyledSignUp = styled.div`
                     color: var(--grey-1);
                     transition: .5s;
                 }
+                
+                .error {
+                font-size: 10px;
+                color: var(--negative);
+                }
+                
             }
             p{
                 font-size: 9px;

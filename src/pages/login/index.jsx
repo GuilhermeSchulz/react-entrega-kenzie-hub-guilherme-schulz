@@ -7,13 +7,12 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useNavigate } from "react-router-dom";
 import { instance } from "../../services/api";
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
-
-export const RenderLogin = ({setUser}) => {
-
-    const loginSucess = () => toast.success("Login realizado com sucesso!", {
+export const RenderLogin = ({ setUser }) => {
+  const loginSucess = () =>
+    toast.success("Login realizado com sucesso!", {
       position: "top-center",
       autoClose: 1000,
       hideProgressBar: false,
@@ -21,10 +20,20 @@ export const RenderLogin = ({setUser}) => {
       pauseOnHover: true,
       draggable: true,
       progress: undefined,
-        });
-    const loginError = () => toast.error("Login falhou!")
+      toastId: 1,
+    });
+  const loginError = () =>
+    toast.error("Falha ao logar!", {
+      position: "top-center",
+      autoClose: 1000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      toastId: 2,
+    });
 
-        console.log(loginSucess)
 
   const schemaLogin = yup.object().shape({
     email: yup.string().required("E-mail obrigatório").email("E-mail inválido"),
@@ -46,34 +55,24 @@ export const RenderLogin = ({setUser}) => {
 
   const navigate = useNavigate();
 
-  const signUpPage = () => navigate("/signup");
 
-  
+  const postLogin = (obj) => {
+    instance
+      .post("sessions", obj)
+      .then((response) => {
+        setUser(response.data.user);
+        window.localStorage.setItem("TOKEN@KENZIEHUB", response.data.token);
+        window.localStorage.setItem("USERID@KENZIEHUB", response.data.user.id);
 
-  const postLogin = ((obj) => {
-    instance.post('sessions', 
-        obj
-    )
-    .then(response => {
-     
-
-        setUser(response.data.user)
-        window.localStorage.setItem("TOKEN@KENZIEHUB", response.data.token)
-        window.localStorage.setItem("USERID@KENZIEHUB", response.data.user.id)
-        
-        const token = window.localStorage.getItem("TOKEN@KENZIEHUB")
-        loginSucess()
-        setTimeout(() => {
-          token?
-          navigate("/dashboard"):
-          <></>
-        }, 1000)
-       
-    })
-    .catch(err =>{ 
-      loginError()
-      console.log(err)})
-  })
+        const token = window.localStorage.getItem("TOKEN@KENZIEHUB");
+        loginSucess();
+        token ? navigate("/dashboard") : <></>;
+      })
+      .catch((err) => {
+        loginError();
+        console.log(err);
+      });
+  };
 
   return (
     <StyledContainer>
@@ -89,7 +88,7 @@ export const RenderLogin = ({setUser}) => {
               placeholder="Digite aqui seu email"
               {...register("email")}
             />
-            {errors.email?.message}
+            <span className="error">{errors.email?.message}</span>
             <label htmlFor="password">Senha:</label>
             <input
               type="password"
@@ -97,13 +96,14 @@ export const RenderLogin = ({setUser}) => {
               placeholder="Digite aqui sua senha"
               {...register("password")}
             />
-            {errors.password?.message}
+            <span className="error">{errors.password?.message}</span>
             <MainButton type="submit">Entrar</MainButton>
           </form>
           <p>Ainda não possui uma conta?</p>
-          <AltButton onClick={signUpPage}>Cadastre-se</AltButton>
+          <AltButton to={"/signup"}>Cadastre-se</AltButton>
         </div>
       </StyledLogin>
+      <ToastContainer />
     </StyledContainer>
   );
 };

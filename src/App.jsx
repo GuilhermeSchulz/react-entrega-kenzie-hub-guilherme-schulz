@@ -1,15 +1,14 @@
-
-import { useState } from 'react';
-import './App.css';
-import Routes from './routes';
-import { GlobalStyles } from './styles';
+import { useState } from "react";
+import "./App.css";
+import Routes from "./routes";
+import { GlobalStyles } from "./styles";
 
 function App() {
-  const [user, setUser] = useState({})
-  console.log(user)
+  const [user, setUser] = useState({});
+  console.log(user);
   return (
     <>
-      <GlobalStyles/>
+      <GlobalStyles />
       <Routes user={user} setUser={setUser}></Routes>
     </>
   );
