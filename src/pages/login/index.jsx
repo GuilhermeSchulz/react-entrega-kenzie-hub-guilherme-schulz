@@ -5,36 +5,11 @@ import "animate.css";
 import * as yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useNavigate } from "react-router-dom";
-import { instance } from "../../services/api";
-import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useContext } from "react"
+import { UserContext } from '../../context/UserContext';
 
-export const RenderLogin = ({ setUser }) => {
-  const loginSucess = () =>
-    toast.success("Login realizado com sucesso!", {
-      position: "top-center",
-      autoClose: 1000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      toastId: 1,
-    });
-  const loginError = () =>
-    toast.error("Falha ao logar!", {
-      position: "top-center",
-      autoClose: 1000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      toastId: 2,
-    });
-
-
+export const RenderLogin = () => {
   const schemaLogin = yup.object().shape({
     email: yup.string().required("E-mail obrigatório").email("E-mail inválido"),
     password: yup
@@ -51,28 +26,8 @@ export const RenderLogin = ({ setUser }) => {
     formState: { errors },
   } = useForm({ resolver: yupResolver(schemaLogin) });
 
-  const onSubmitLogin = (data) => postLogin(data);
+  const {onSubmitLogin} = useContext(UserContext)
 
-  const navigate = useNavigate();
-
-
-  const postLogin = (obj) => {
-    instance
-      .post("sessions", obj)
-      .then((response) => {
-        setUser(response.data.user);
-        window.localStorage.setItem("TOKEN@KENZIEHUB", response.data.token);
-        window.localStorage.setItem("USERID@KENZIEHUB", response.data.user.id);
-
-        const token = window.localStorage.getItem("TOKEN@KENZIEHUB");
-        loginSucess();
-        token ? navigate("/dashboard") : <></>;
-      })
-      .catch((err) => {
-        loginError();
-        console.log(err);
-      });
-  };
 
   return (
     <StyledContainer>
@@ -103,7 +58,6 @@ export const RenderLogin = ({ setUser }) => {
           <AltButton to={"/signup"}>Cadastre-se</AltButton>
         </div>
       </StyledLogin>
-      <ToastContainer />
     </StyledContainer>
   );
 };

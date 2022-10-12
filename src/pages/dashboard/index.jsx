@@ -1,51 +1,77 @@
 import { StyledContainer } from "../login/style";
 import logo from "../../assets/Logo.png";
-import { BackButton } from "../../components/buttons";
+import { AddButton, BackButton, StyledDiv, StyledList } from "../../components/buttons";
 import { StyledDashboard } from "./styles";
-import { useNavigate } from "react-router-dom";
-import { useEffect } from "react";
-
-export const RenderDashboard = ({ user }) => {
-
-  const navigate = useNavigate()
-
-  useEffect(()=>{
-    if(!localStorage.getItem("TOKEN@KENZIEHUB")){
-      navigate("/login");
-    }
-    },[]);
+import { Navigate} from "react-router-dom";
+import { useContext} from "react";
+import { UserContext } from "../../context/UserContext";
+import trash from "../../assets/trash.png"
+import plus from "../../assets/+.png"
+import { ModalContext } from "../../context/ModalContext";
 
 
+
+
+export const RenderDashboard = () => {
+  const { user, loading } = useContext(UserContext);
+
+  const {HandleModal, AddModal} = useContext(ModalContext)
+
+
+  if (loading) {
+    return null;
+  }
   const exitButton = () => {
     window.localStorage.clear();
   };
 
 
-  return(
-    <StyledContainer>
-      <StyledDashboard>
-        <div className="animate__jackInTheBox animation">
-          <nav>
-            <div>
-              <img src={logo} alt="Logo KenzieHub" />
-              <BackButton onClick={exitButton} to={"/login"}>Sair</BackButton>
-            </div>
-          </nav>
-          <header>
-            <div>
-              <h1>Olá, {user.name}.</h1>
-              <p>{user.course_module}</p>
-            </div>
-          </header>
-          <main>
-            <h2>Que pena! Estamos em desenvolvimento :(</h2>
-            <h3>
-              Nossa aplicação está em desenvolvimento, em breve teremos
-              novidades
-            </h3>
-          </main>
-        </div>
-      </StyledDashboard>
-    </StyledContainer>
-  )
+  
+  return (
+    <>
+    {user ?
+      (    
+      <StyledContainer>
+        <StyledDashboard>
+          <div className="animate__jackInTheBox animation">
+            {AddModal()}
+            <nav>
+              <div>
+                <img src={logo} alt="Logo KenzieHub" />
+                <BackButton onClick={exitButton} to={"/login"}>
+                  Sair
+                </BackButton>
+              </div>
+            </nav>
+            <header>
+              <div>
+                <h1>Olá, {user.name}.</h1>
+                <p>{user.course_module}</p>
+              </div>
+            </header>
+            <main>
+              <StyledDiv>
+                <h2>Tecnologias</h2>
+                <AddButton onClick={() => HandleModal()}><img src={plus} alt="Adicionar" /></AddButton>
+              </StyledDiv>
+              <StyledList>
+                <li>
+                  <h2>React</h2>
+                  <div>
+                  <p>Intermediário</p>
+                  <AddButton><img src={trash} alt="Excluir" /></AddButton>
+                  </div>
+                </li>
+
+              </StyledList>
+            </main>
+          </div>
+        </StyledDashboard>
+      </StyledContainer>
+      ):(
+      <Navigate to="/login" replace />
+      )}
+    </>
+    
+  );
 };

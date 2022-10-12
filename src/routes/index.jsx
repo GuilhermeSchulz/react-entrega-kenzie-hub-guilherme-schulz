@@ -4,11 +4,11 @@ import { RenderDashboard } from "../pages/dashboard";
 import { RenderLogin } from "../pages/login";
 import { RenderHomePage } from "../pages/signup";
 
-const RoutesMain = ({ user, setUser }) => (
+const RoutesMain = () => (
   <Routes>
-    <Route index path="/login" element={<RenderLogin setUser={setUser} />} />
+    <Route index path="/login" element={<RenderLogin/>} />
     <Route path="/signup" element={<RenderHomePage />} />
-    <Route path="/dashboard" element={<RenderDashboard user={user} />} />
+    <Route path="/dashboard" element={<RenderDashboard/>} />
     <Route path="" element={<Navigate to={"/login"}/>}/>
     <Route path="*" element={<RenderError/>} />
   </Routes>

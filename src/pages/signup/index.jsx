@@ -1,37 +1,15 @@
 import { BackButton, MainButton } from "../../components/buttons";
 import { StyledContainer } from "../login/style";
 import logo from "../../assets/Logo.png";
-import { useNavigate } from "react-router-dom";
 import { StyledSignUp } from "./style";
 import * as yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { ToastContainer, toast } from "react-toastify";
-import { instance } from "../../services/api";
+import { useContext } from "react"
+import { UserContext } from '../../context/UserContext';
 
 export const RenderHomePage = () => {
-  const signUpSucess = () =>
-    toast.success("Cadastrado com sucesso!", {
-      position: "top-center",
-      autoClose: 1000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      toastId: 1,
-    });
-  const signUpError = () =>
-    toast.error("Falha ao cadastrar!", {
-      position: "top-center",
-      autoClose: 1000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      toastId: 2,
-    });
+ const {onSubmitSignUp} = useContext(UserContext)
 
   const modules = [
     "Primeiro módulo (Introdução ao Frontend)",
@@ -69,7 +47,7 @@ export const RenderHomePage = () => {
     formState: { errors },
   } = useForm({ resolver: yupResolver(finalSchema) });
 
-  const onSubmitSignUp = (data) => postSignUp(data);
+
 
   const modulesOptions = modules.map((module, key) => {
     return (
@@ -79,21 +57,6 @@ export const RenderHomePage = () => {
     );
   });
 
-  const navigate = useNavigate();
-
-
-  const postSignUp = (obj) => {
-    instance
-      .post("users", obj)
-      .then((response) => {
-        signUpSucess();
-        navigate("/login");
-      })
-      .catch((err) => {
-        console.log(err);
-        signUpError();
-      });
-  };
 
   return (
     <StyledContainer>
@@ -170,7 +133,6 @@ export const RenderHomePage = () => {
           </form>
         </div>
       </StyledSignUp>
-      <ToastContainer />
     </StyledContainer>
   );
 };

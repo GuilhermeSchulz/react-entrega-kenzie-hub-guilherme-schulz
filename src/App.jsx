@@ -1,15 +1,21 @@
-import { useState } from "react";
 import "./App.css";
 import Routes from "./routes";
 import { GlobalStyles } from "./styles";
-
+import { ToastContainer } from 'react-toastify';
+import { UserProvider } from './context/UserContext';
+import { ModalProvider } from "./context/ModalContext";
 function App() {
-  const [user, setUser] = useState({});
-
+  
   return (
     <>
-      <GlobalStyles />
-      <Routes user={user} setUser={setUser}></Routes>
+    <UserProvider>
+      <ModalProvider>
+        <GlobalStyles />
+
+        <Routes/>
+      </ModalProvider>
+    <ToastContainer/>
+    </UserProvider>
     </>
   );
 }

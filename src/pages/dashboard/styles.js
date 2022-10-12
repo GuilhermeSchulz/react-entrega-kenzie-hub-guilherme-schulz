@@ -106,3 +106,93 @@ export const StyledDashboard = styled.div `
     }
 
 `
+export const StyledModal = styled.section `
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    z-index: 1;
+    background-color: #12121450;
+div{
+    max-width: 370px;
+    max-height: 370px;
+    display: flex;
+    width: 80%;
+    height: 80%;
+    flex-direction: column;
+    background-color: var(--grey-3);
+    border-radius: var(--border-radius);
+    header{
+        min-height:initial ;
+        height:20%;
+        display: flex;
+        border-radius: var(--border-radius) var(--border-radius) 0 0;
+        background-color: var(--grey-2);
+        width: 100%;
+        justify-content: space-between;
+        margin-bottom: 0;
+        align-items: center;
+        h2{
+            color: var(--grey-0);
+        font-size: var(--headline-size-1);
+        }
+        button{
+            background-color: transparent;
+            border: none;
+            color: var(--grey-1);
+            font-size: 20px;
+        }
+    }
+    main{
+        width: 100%;
+        height: 80%;
+        form{
+            display: flex;
+            width: 100%;
+            flex-direction: column;
+            justify-content: center;
+            gap: 1rem;
+            label{
+                    font-size: 9px;
+                    font-weight: var(--headline-weight-1);
+                    text-align: left;
+                    width: 100%;
+                }
+                .error {
+                font-size: 10px;
+                color: var(--negative);
+                }
+                input{
+                    padding: .8rem .5rem;
+                    width: 100%;
+                    background-color: var(--grey-2);
+                    outline: none;
+                    border: 2px solid transparent;
+                    border-radius: var(--border-radius);
+                    color: var(--grey-1);
+                    transition: .5s;
+                    &:focus{
+                        border: 2px solid var(--grey-0);
+                        color: var(--grey-0);
+                    }
+                    &:hover{
+                        border: 2px solid var(--grey-0);
+                    }
+                }
+                select{
+                    padding: .8rem .5rem;
+                    width: 100%;
+                    background-color: var(--grey-2);
+                    outline: none;
+                    border: 2px solid transparent;
+                    border-radius: var(--border-radius);
+                    color: var(--grey-1);
+                    transition: .5s;
+                }
+
+            }
+    }
+}
+`
