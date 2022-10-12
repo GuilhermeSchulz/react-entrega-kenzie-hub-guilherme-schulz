@@ -13,8 +13,8 @@ function App() {
         <GlobalStyles />
 
         <Routes/>
-      </ModalProvider>
     <ToastContainer/>
+      </ModalProvider>
     </UserProvider>
     </>
   );

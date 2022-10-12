@@ -1,7 +1,9 @@
-import { createContext, useEffect, useState } from "react";
+import { createContext,  useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { instance } from "../services/api";
+
+
 
 export const UserContext = createContext({});
 
@@ -51,13 +53,14 @@ export const UserProvider = ({ children }) => {
       progress: undefined,
       toastId: 2,
     });
-
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-
   const navigate = useNavigate();
   const onSubmitSignUp = (data) => postSignUp(data);
   const onSubmitLogin = (data) => postLogin(data);
+  
+
+
 
   const postLogin = (obj) => {
     instance
@@ -95,8 +98,10 @@ export const UserProvider = ({ children }) => {
       if (token) {
         try {
           instance.defaults.headers.authorization = `Bearer ${token}`;
-          const { data } = await instance.get("profile");
+          const {data} = await instance.get("profile");
           setUser(data);
+          
+
         } catch (error) {
           console.log(error);
           localStorage.clear()
@@ -106,9 +111,9 @@ export const UserProvider = ({ children }) => {
     };
     loadUser();
   }, []);
-  
+
   return (
-    <UserContext.Provider value={{ user, onSubmitSignUp, onSubmitLogin, loading }}>
+    <UserContext.Provider value={{ user,setUser,  onSubmitSignUp, onSubmitLogin, loading }}>
       {children}
     </UserContext.Provider>
   );

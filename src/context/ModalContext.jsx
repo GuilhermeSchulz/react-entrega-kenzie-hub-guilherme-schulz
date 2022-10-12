@@ -1,4 +1,4 @@
-import { createContext, useEffect, useState } from "react";
+import { createContext, useContext,  useState } from "react";
 import * as yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -6,14 +6,15 @@ import { StyledModal } from "../pages/dashboard/styles";
 import { MainButton } from "../components/buttons";
 import "animate.css";
 import { instance } from "../services/api";
+import { UserContext } from "./UserContext";
 
 export const ModalContext = createContext({});
 export const ModalProvider = ({ children }) => {
   const [modal, setModal] = useState(false);
-  const [techs, setTechs] = useState([])
   const [animation, setAnimation] = useState(
     "animate__animated animate__zoomIn"
   );
+const {setUser} = useContext(UserContext)
   const status = ["Iniciante", "Intermediário", "Avançado"];
   const schema = yup.object().shape({
     title: yup.string().required("Nome obrigatório"),
@@ -22,6 +23,7 @@ export const ModalProvider = ({ children }) => {
       .required("Escolha um status")
       .oneOf(status, "Selecione um status da lista"),
   });
+
 
   const {
     register,
@@ -43,25 +45,36 @@ export const ModalProvider = ({ children }) => {
     }, 600);
   };
   const postTech = (obj) => {
-    instance.post("users/techs", obj)
-    .then((response) => {
-        console.log(response)
-        closeModal()
-    })
-    .catch((err) => {console.log(err)})
+    instance
+      .post("users/techs", obj)
+      .then((response) => {
+        closeModal();
+        loadTechs();
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
-useEffect(() => {
-    const loadTechs = async () => {
+
+  const loadTechs = async () => {
     try {
-        const { data } = await instance.get("profile");
-        setTechs(data.techs);
-      } catch (error) {
-        console.log(error);
-      }
+      const { data } = await instance.get("profile");
+      setUser(data);
+    } catch (error) {
+      console.log(error);
     }
-    loadTechs()
-},[])
-console.log(techs)
+  };
+
+
+  const deleteTech = async (id) => {
+    try {
+      await instance.delete(`users/techs/${id}`);
+      loadTechs();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const AddModal = () => {
     return (
       <>
@@ -107,7 +120,7 @@ console.log(techs)
   };
 
   return (
-    <ModalContext.Provider value={{ HandleModal, AddModal, techs }}>
+    <ModalContext.Provider value={{ HandleModal, AddModal, loadTechs, deleteTech }}>
       {children}
     </ModalContext.Provider>
   );

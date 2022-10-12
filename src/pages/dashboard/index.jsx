@@ -15,8 +15,7 @@ import { ModalContext } from "../../context/ModalContext";
 export const RenderDashboard = () => {
   const { user, loading } = useContext(UserContext);
 
-  const {HandleModal, AddModal} = useContext(ModalContext)
-
+  const {HandleModal, AddModal, deleteTech} = useContext(ModalContext)
 
   if (loading) {
     return null;
@@ -55,14 +54,15 @@ export const RenderDashboard = () => {
                 <AddButton onClick={() => HandleModal()}><img src={plus} alt="Adicionar" /></AddButton>
               </StyledDiv>
               <StyledList>
-                <li>
-                  <h2>React</h2>
-                  <div>
-                  <p>Intermediário</p>
-                  <AddButton><img src={trash} alt="Excluir" /></AddButton>
+                {user.techs.map((element, index) => (
+                  <li className="animate__animated animate__lightSpeedInLeft" key={index}>
+                  <h2>{element.title}</h2>
+                    <div>
+                    <p>{element.status}</p>
+                    <AddButton><img src={trash} onClick={() => {deleteTech(element.id)}} alt="Excluir" /></AddButton>
                   </div>
                 </li>
-
+                ))}
               </StyledList>
             </main>
           </div>
