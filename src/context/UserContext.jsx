@@ -55,6 +55,7 @@ export const UserProvider = ({ children }) => {
     });
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [refresh, setRefresh] = useState(false);
   const navigate = useNavigate();
   const onSubmitSignUp = (data) => postSignUp(data);
   const onSubmitLogin = (data) => postLogin(data);
@@ -100,7 +101,7 @@ export const UserProvider = ({ children }) => {
           instance.defaults.headers.authorization = `Bearer ${token}`;
           const {data} = await instance.get("profile");
           setUser(data);
-          
+          setRefresh(false)
 
         } catch (error) {
           console.log(error);
@@ -110,10 +111,10 @@ export const UserProvider = ({ children }) => {
       setLoading(false);
     };
     loadUser();
-  }, []);
+  }, [refresh]);
 
   return (
-    <UserContext.Provider value={{ user,setUser,  onSubmitSignUp, onSubmitLogin, loading }}>
+    <UserContext.Provider value={{ user,setUser,setRefresh, onSubmitSignUp, onSubmitLogin, loading }}>
       {children}
     </UserContext.Provider>
   );

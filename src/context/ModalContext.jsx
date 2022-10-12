@@ -7,6 +7,7 @@ import { MainButton } from "../components/buttons";
 import "animate.css";
 import { instance } from "../services/api";
 import { UserContext } from "./UserContext";
+import { toast } from "react-toastify";
 
 export const ModalContext = createContext({});
 export const ModalProvider = ({ children }) => {
@@ -14,17 +15,22 @@ export const ModalProvider = ({ children }) => {
   const [animation, setAnimation] = useState(
     "animate__animated animate__zoomIn"
   );
-const {setUser} = useContext(UserContext)
+const {setRefresh} = useContext(UserContext)
   const status = ["Iniciante", "Intermediário", "Avançado"];
   const schema = yup.object().shape({
-    title: yup.string().required("Nome obrigatório"),
+    title: yup.string().required("Nome obrigatório").uppercase(),
     status: yup
       .string()
       .required("Escolha um status")
       .oneOf(status, "Selecione um status da lista"),
   });
 
-
+  const [liAnimation, setLiAnimation] = useState("animate__animated animate__lightSpeedInLeft")
+  const handleLiAnimation = () => {
+    liAnimation === "animate__animated animate__lightSpeedInLeft"?
+    setLiAnimation("animate__animated animate__lightSpeedOutLeft"):
+    setLiAnimation("animate__animated animate__lightSpeedInLeft")
+  }
   const {
     register,
     handleSubmit,
@@ -49,27 +55,53 @@ const {setUser} = useContext(UserContext)
       .post("users/techs", obj)
       .then((response) => {
         closeModal();
-        loadTechs();
+        toast.success("Adicionado com sucesso!", {
+          position: "top-center",
+          autoClose: 1000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          toastId: 1,
+        })
+        setRefresh(true)
+        handleLiAnimation()
       })
       .catch((err) => {
+        toast.error("Falha ao adicionar!",{
+          position: "top-center",
+          autoClose: 1000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          toastId: 2,
+        })
         console.log(err);
       });
   };
 
-  const loadTechs = async () => {
-    try {
-      const { data } = await instance.get("profile");
-      setUser(data);
-    } catch (error) {
-      console.log(error);
-    }
-  };
 
 
   const deleteTech = async (id) => {
     try {
       await instance.delete(`users/techs/${id}`);
-      loadTechs();
+      handleLiAnimation()
+      toast.success("Removido com sucesso!", {
+        position: "top-center",
+        autoClose: 1000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        toastId: 3,
+      })
+      setTimeout(() => {
+        setRefresh(true)
+      }, 600)
     } catch (error) {
       console.log(error);
     }
@@ -120,7 +152,7 @@ const {setUser} = useContext(UserContext)
   };
 
   return (
-    <ModalContext.Provider value={{ HandleModal, AddModal, loadTechs, deleteTech }}>
+    <ModalContext.Provider value={{ HandleModal,liAnimation , handleLiAnimation, AddModal, deleteTech }}>
       {children}
     </ModalContext.Provider>
   );
