@@ -123,9 +123,6 @@ const {setRefresh} = useContext(UserContext)
                   <span className="error">{errors.title?.message}</span>
                   <label htmlFor="selectStatus">Selecionar Status:</label>
                   <select name="selectStatus" {...register("status")}>
-                    <option value={""} defaultValue disabled>
-                      Escolha um módulo
-                    </option>
                     {status.map((element) => (
                       <option value={element} key={element}>
                         {element}
