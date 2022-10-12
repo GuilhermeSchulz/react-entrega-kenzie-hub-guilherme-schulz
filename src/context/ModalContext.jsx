@@ -25,12 +25,7 @@ const {setRefresh} = useContext(UserContext)
       .oneOf(status, "Selecione um status da lista"),
   });
 
-  const [liAnimation, setLiAnimation] = useState("animate__animated animate__lightSpeedInLeft")
-  const handleLiAnimation = () => {
-    liAnimation === "animate__animated animate__lightSpeedInLeft"?
-    setLiAnimation("animate__animated animate__lightSpeedOutLeft"):
-    setLiAnimation("animate__animated animate__lightSpeedInLeft")
-  }
+
   const {
     register,
     handleSubmit,
@@ -66,7 +61,6 @@ const {setRefresh} = useContext(UserContext)
           toastId: 1,
         })
         setRefresh(true)
-        handleLiAnimation()
       })
       .catch((err) => {
         toast.error("Falha ao adicionar!",{
@@ -88,7 +82,7 @@ const {setRefresh} = useContext(UserContext)
   const deleteTech = async (id) => {
     try {
       await instance.delete(`users/techs/${id}`);
-      handleLiAnimation()
+
       toast.success("Removido com sucesso!", {
         position: "top-center",
         autoClose: 1000,
@@ -152,7 +146,7 @@ const {setRefresh} = useContext(UserContext)
   };
 
   return (
-    <ModalContext.Provider value={{ HandleModal,liAnimation , handleLiAnimation, AddModal, deleteTech }}>
+    <ModalContext.Provider value={{ HandleModal,AddModal, deleteTech }}>
       {children}
     </ModalContext.Provider>
   );

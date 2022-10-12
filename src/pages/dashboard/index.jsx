@@ -14,7 +14,7 @@ import { ModalContext } from "../../context/ModalContext";
 
 export const RenderDashboard = () => {
   const { user, loading } = useContext(UserContext);
-  const {HandleModal, AddModal, deleteTech, liAnimation} = useContext(ModalContext)
+  const {HandleModal, AddModal, deleteTech} = useContext(ModalContext)
   
   if (loading) {
     return null;
@@ -54,7 +54,7 @@ export const RenderDashboard = () => {
               </StyledDiv>
               <StyledList>
                 {user.techs.map((element, index) => (
-                  <li className={liAnimation} key={index}>
+                  <li className="animate__animated animate__lightSpeedInLeft" key={index}>
                   <h2>{element.title}</h2>
                     <div>
                     <p>{element.status}</p>
