@@ -6,8 +6,9 @@ import * as yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import "react-toastify/dist/ReactToastify.css";
-import { useContext } from "react"
+import { useContext, useEffect } from "react"
 import { UserContext } from '../../context/UserContext';
+import { useNavigate } from "react-router-dom";
 
 export const RenderLogin = () => {
   const schemaLogin = yup.object().shape({
@@ -26,8 +27,19 @@ export const RenderLogin = () => {
     formState: { errors },
   } = useForm({ resolver: yupResolver(schemaLogin) });
 
-  const {onSubmitLogin} = useContext(UserContext)
+  const navigate = useNavigate()
 
+  const {onSubmitLogin} = useContext(UserContext)
+  
+  useEffect(() => {
+    const loadUser = () => {
+      const token = localStorage.getItem("TOKEN@KENZIEHUB");
+      if (token) {
+          navigate("/dashboard")
+      }
+    };
+    loadUser();
+  }, []);
 
   return (
     <StyledContainer>

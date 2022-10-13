@@ -58,7 +58,7 @@ export const RenderDashboard = () => {
                   <h2>{element.title}</h2>
                     <div>
                     <p>{element.status}</p>
-                    <AddButton><img src={trash} onClick={() => {deleteTech(element.id)}} alt="Excluir" /></AddButton>
+                    <AddButton onClick={() => {deleteTech(element.id)}}><img src={trash}  alt="Excluir" /></AddButton>
                   </div>
                 </li>
                 ))}

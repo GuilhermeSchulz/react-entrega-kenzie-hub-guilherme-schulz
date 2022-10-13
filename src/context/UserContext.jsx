@@ -73,6 +73,7 @@ export const UserProvider = ({ children }) => {
 
         const token = window.localStorage.getItem("TOKEN@KENZIEHUB");
         loginSucess();
+        setRefresh(true)
         token ? navigate("/dashboard") : <></>;
       })
       .catch((err) => {
@@ -114,7 +115,7 @@ export const UserProvider = ({ children }) => {
   }, [refresh]);
 
   return (
-    <UserContext.Provider value={{ user,setUser,setRefresh, onSubmitSignUp, onSubmitLogin, loading }}>
+    <UserContext.Provider value={{ user,setUser,setRefresh, onSubmitSignUp, onSubmitLogin, loading}}>
       {children}
     </UserContext.Provider>
   );
