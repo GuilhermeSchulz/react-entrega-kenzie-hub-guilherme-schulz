@@ -1,13 +1,56 @@
 import { createContext,  useEffect, useState } from "react";
+import { FieldValues } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { instance } from "../services/api";
 
 
+interface iProviderProps{
+  children: React.ReactNode;
+}
+export interface iDataLogin {
+  email: string;
+  password: string;
+}
+export interface iDataSignup {
+  email: string;
+  password: string;
+  passwordConfirm: string;
+  name: string;
+  bio: string;
+  contact: string;
+  course_module: string;
+}
+interface iUser{
+  avatar_url: null;
+  bio: string;
+  contact: string;
+  course_module: string;
+  created_at: string;
+  email: string;
+  id: string;
+  name: string;
+  techs: [{
+    id: string;
+    title: string;
+    status: string;
+    created_at: string;
+    updated_at: string;
+  }]  | []
+  updated_at: string;
+  works: null;
+}
+interface iUserContext{
+  user: iUser | null;
+  setUser: React.Dispatch<React.SetStateAction<iUser | null>>;
+  loading: boolean;
+  setRefresh: React.Dispatch<React.SetStateAction<boolean>>;
+  onSubmitSignUp: (data: FieldValues) => void;
+  onSubmitLogin: (data: FieldValues) => void; 
+}
+export const UserContext = createContext({} as iUserContext );
 
-export const UserContext = createContext({});
-
-export const UserProvider = ({ children }) => {
+export const UserProvider = ({ children } : iProviderProps) => {
   const loginSucess = () =>
     toast.success("Login realizado com sucesso!", {
       position: "top-center",
@@ -30,7 +73,6 @@ export const UserProvider = ({ children }) => {
       progress: undefined,
       toastId: 2,
     });
-
   const signUpSucess = () =>
     toast.success("Cadastrado com sucesso!", {
       position: "top-center",
@@ -53,17 +95,18 @@ export const UserProvider = ({ children }) => {
       progress: undefined,
       toastId: 2,
     });
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState <iUser | null>(null);
   const [loading, setLoading] = useState(true);
   const [refresh, setRefresh] = useState(false);
+
   const navigate = useNavigate();
-  const onSubmitSignUp = (data) => postSignUp(data);
-  const onSubmitLogin = (data) => postLogin(data);
+
+  const onSubmitSignUp = (data : FieldValues) => postSignUp(data);
+  const onSubmitLogin = (data : FieldValues) => postLogin(data);
   
 
 
-
-  const postLogin = (obj) => {
+  const postLogin = (obj : FieldValues) => {
     instance
       .post("sessions", obj)
       .then((response) => {
@@ -82,7 +125,8 @@ export const UserProvider = ({ children }) => {
       });
   };
 
-  const postSignUp = (obj) => {
+ 
+  const postSignUp = (obj : FieldValues) => {
     instance
       .post("users", obj)
       .then((response) => {

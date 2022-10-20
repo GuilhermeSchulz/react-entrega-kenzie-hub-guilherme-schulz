@@ -7,7 +7,7 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import "react-toastify/dist/ReactToastify.css";
 import { useContext, useEffect } from "react"
-import { UserContext } from '../../context/UserContext';
+import { iDataLogin, UserContext } from '../../context/UserContext';
 import { useNavigate } from "react-router-dom";
 
 export const RenderLogin = () => {
@@ -17,7 +17,7 @@ export const RenderLogin = () => {
       .string()
       .required("Senha obrigatória")
       .matches(
-        "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$",
+        /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/,
         "É necessario pelo menos um número, uma letra maiuscula, e um caractere especial"
       ),
   });
@@ -25,7 +25,7 @@ export const RenderLogin = () => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm({ resolver: yupResolver(schemaLogin) });
+  } = useForm<iDataLogin>({ resolver: yupResolver(schemaLogin) });
 
   const navigate = useNavigate()
 
@@ -39,6 +39,7 @@ export const RenderLogin = () => {
       }
     };
     loadUser();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -51,7 +52,6 @@ export const RenderLogin = () => {
             <label htmlFor="email">Email:</label>
             <input
               type="email"
-              name="email"
               placeholder="Digite aqui seu email"
               {...register("email")}
             />
@@ -59,7 +59,6 @@ export const RenderLogin = () => {
             <label htmlFor="password">Senha:</label>
             <input
               type="password"
-              name="password"
               placeholder="Digite aqui sua senha"
               {...register("password")}
             />

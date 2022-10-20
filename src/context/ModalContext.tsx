@@ -1,6 +1,6 @@
 import { createContext, useContext,  useState } from "react";
 import * as yup from "yup";
-import { useForm } from "react-hook-form";
+import { FieldValues, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { StyledModal } from "../pages/dashboard/styles";
 import { MainButton } from "../components/buttons";
@@ -9,13 +9,31 @@ import { instance } from "../services/api";
 import { UserContext } from "./UserContext";
 import { toast } from "react-toastify";
 
-export const ModalContext = createContext({});
-export const ModalProvider = ({ children }) => {
+
+
+
+interface iProviderProps{
+  children: React.ReactNode;
+}
+
+interface iSubmitTech{
+  title: string;
+  status: string;
+}
+
+interface iModalContext{
+  HandleModal: () => void,
+  AddModal: () => JSX.Element,
+  deleteTech: (id: string) => Promise<void>
+}
+
+export const ModalContext = createContext({} as iModalContext);
+export const ModalProvider = ({ children } : iProviderProps) => {
   const [modal, setModal] = useState(false);
   const [animation, setAnimation] = useState(
     "animate__animated animate__zoomIn"
   );
-const {setRefresh} = useContext(UserContext)
+const { setRefresh } = useContext(UserContext)
   const status = ["Iniciante", "Intermediário", "Avançado"];
   const schema = yup.object().shape({
     title: yup.string().required("Nome obrigatório").uppercase(),
@@ -30,9 +48,9 @@ const {setRefresh} = useContext(UserContext)
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm({ resolver: yupResolver(schema) });
+  } = useForm<iSubmitTech>({ resolver: yupResolver(schema) });
 
-  const submitTech = (data) => postTech(data);
+  const submitTech = (data: FieldValues) => postTech(data);
 
   const HandleModal = () => {
     setModal(true);
@@ -45,7 +63,7 @@ const {setRefresh} = useContext(UserContext)
       setModal(false);
     }, 600);
   };
-  const postTech = (obj) => {
+  const postTech = (obj : FieldValues) => {
     instance
       .post("users/techs", obj)
       .then((response) => {
@@ -79,7 +97,7 @@ const {setRefresh} = useContext(UserContext)
 
 
 
-  const deleteTech = async (id) => {
+  const deleteTech = async (id: string) => {
     try {
       await instance.delete(`users/techs/${id}`);
 
@@ -116,20 +134,19 @@ const {setRefresh} = useContext(UserContext)
                   <label htmlFor="nomeTec">Nome:</label>
                   <input
                     type="text"
-                    name="nomeTec"
                     placeholder="Nome da Tecnologia"
                     {...register("title")}
                   />
                   <span className="error">{errors.title?.message}</span>
                   <label htmlFor="selectStatus">Selecionar Status:</label>
-                  <select name="selectStatus" {...register("status")}>
+                  <select {...register("status")}>
                     {status.map((element) => (
                       <option value={element} key={element}>
                         {element}
                       </option>
                     ))}
                   </select>
-                  <span className="error">{errors.title?.message}</span>
+                  <span className="error">{errors.status?.message}</span>
                   <MainButton type="submit">Cadastrar Tecnologia</MainButton>
                 </form>
               </main>

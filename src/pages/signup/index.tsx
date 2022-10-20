@@ -6,7 +6,7 @@ import * as yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useContext } from "react"
-import { UserContext } from '../../context/UserContext';
+import { iDataSignup, UserContext } from '../../context/UserContext';
 
 export const RenderHomePage = () => {
  const {onSubmitSignUp} = useContext(UserContext)
@@ -17,13 +17,14 @@ export const RenderHomePage = () => {
     "Terceiro módulo (Introdução ao Backend)",
     "Quarto módulo (Backend Avançado)",
   ];
+  
   const schema = yup.object().shape({
     email: yup.string().required("E-mail obrigatório").email("E-mail inválido"),
     password: yup
       .string()
       .required("Senha obrigatória")
       .matches(
-        "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$",
+        /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/,
         "É necessario pelo menos um número, uma letra maiuscula, e um caractere especial"
       ),
     passwordConfirm: yup
@@ -39,13 +40,11 @@ export const RenderHomePage = () => {
       .oneOf(modules, "Selecione um dos módulos da lista"),
   });
 
-  const finalSchema = schema.omit(["passwordConfirm"]);
-
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm({ resolver: yupResolver(finalSchema) });
+  } = useForm<iDataSignup>({ resolver: yupResolver(schema) });
 
 
 
@@ -72,7 +71,7 @@ export const RenderHomePage = () => {
             <label htmlFor="name">Nome:</label>
             <input
               type="text"
-              name="name"
+              
               placeholder="Digite aqui seu nome"
               {...register("name")}
             />
@@ -80,7 +79,7 @@ export const RenderHomePage = () => {
             <label htmlFor="email">Email:</label>
             <input
               type="email"
-              name="email"
+              
               placeholder="Digite aqui seu email"
               {...register("email")}
             />
@@ -88,7 +87,7 @@ export const RenderHomePage = () => {
             <label htmlFor="password">Senha:</label>
             <input
               type="password"
-              name="password"
+              
               placeholder="Digite aqui sua senha"
               {...register("password")}
             />
@@ -96,7 +95,7 @@ export const RenderHomePage = () => {
             <label htmlFor="passwordConfirm">Confirmar senha:</label>
             <input
               type="password"
-              name="passwordConfirm"
+              
               placeholder="Digite novamente sua senha"
               {...register("passwordConfirm")}
             />
@@ -104,7 +103,7 @@ export const RenderHomePage = () => {
             <label htmlFor="bio">Bio:</label>
             <input
               type="text"
-              name="bio"
+              
               placeholder="Fale sobre você"
               {...register("bio")}
             />
@@ -112,14 +111,14 @@ export const RenderHomePage = () => {
             <label htmlFor="contact">Contato:</label>
             <input
               type="text"
-              name="contact"
+              
               placeholder="Opção de contato"
               {...register("contact")}
             />
             <span className="error">{errors.contact?.message}</span>
             <label htmlFor="course_module">Selecione o módulo:</label>
             <select
-              name="course_module"
+              
               id="Select"
               {...register("course_module")}
             >
