@@ -3,6 +3,7 @@ import { FieldValues } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { instance } from "../services/api";
+import { iErrorAxios } from "./ModalContext";
 
 
 interface iProviderProps{
@@ -11,6 +12,10 @@ interface iProviderProps{
 export interface iDataLogin {
   email: string;
   password: string;
+}
+interface iAxiosData{
+  user:iUser
+  token: string;
 }
 export interface iDataSignup {
   email: string;
@@ -39,6 +44,7 @@ interface iUser{
   }]  | []
   updated_at: string;
   works: null;
+  
 }
 interface iUserContext{
   user: iUser | null;
@@ -108,7 +114,7 @@ export const UserProvider = ({ children } : iProviderProps) => {
 
   const postLogin = (obj : FieldValues) => {
     instance
-      .post("sessions", obj)
+      .post<iAxiosData>("sessions", obj)
       .then((response) => {
         setUser(response.data.user);
         window.localStorage.setItem("TOKEN@KENZIEHUB", response.data.token);
@@ -119,7 +125,7 @@ export const UserProvider = ({ children } : iProviderProps) => {
         setRefresh(true)
         token ? navigate("/dashboard") : <></>;
       })
-      .catch((err) => {
+      .catch((err: iErrorAxios) => {
         loginError();
         console.log(err);
       });
@@ -128,12 +134,12 @@ export const UserProvider = ({ children } : iProviderProps) => {
  
   const postSignUp = (obj : FieldValues) => {
     instance
-      .post("users", obj)
+      .post<iUser>("users", obj)
       .then((response) => {
         signUpSucess();
         navigate("/login");
       })
-      .catch((err) => {
+      .catch((err: iErrorAxios) => {
         console.log(err);
         signUpError();
       });
@@ -144,7 +150,7 @@ export const UserProvider = ({ children } : iProviderProps) => {
       if (token) {
         try {
           instance.defaults.headers.authorization = `Bearer ${token}`;
-          const {data} = await instance.get("profile");
+          const {data} = await instance.get<iUser>("profile");
           setUser(data);
           setRefresh(false)
 

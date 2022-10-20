@@ -26,7 +26,10 @@ interface iModalContext{
   AddModal: () => JSX.Element,
   deleteTech: (id: string) => Promise<void>
 }
-
+export interface iErrorAxios{
+  status: string;
+  message: string;
+}
 export const ModalContext = createContext({} as iModalContext);
 export const ModalProvider = ({ children } : iProviderProps) => {
   const [modal, setModal] = useState(false);
@@ -65,7 +68,7 @@ const { setRefresh } = useContext(UserContext)
   };
   const postTech = (obj : FieldValues) => {
     instance
-      .post("users/techs", obj)
+      .post<iSubmitTech>("users/techs", obj)
       .then((response) => {
         closeModal();
         toast.success("Adicionado com sucesso!", {
@@ -80,7 +83,7 @@ const { setRefresh } = useContext(UserContext)
         })
         setRefresh(true)
       })
-      .catch((err) => {
+      .catch((err:iErrorAxios) => {
         toast.error("Falha ao adicionar!",{
           position: "top-center",
           autoClose: 1000,
@@ -99,7 +102,7 @@ const { setRefresh } = useContext(UserContext)
 
   const deleteTech = async (id: string) => {
     try {
-      await instance.delete(`users/techs/${id}`);
+      await instance.delete<iErrorAxios>(`users/techs/${id}`);
 
       toast.success("Removido com sucesso!", {
         position: "top-center",
@@ -114,7 +117,7 @@ const { setRefresh } = useContext(UserContext)
       setTimeout(() => {
         setRefresh(true)
       }, 600)
-    } catch (error) {
+    } catch(error) {
       console.log(error);
     }
   };
